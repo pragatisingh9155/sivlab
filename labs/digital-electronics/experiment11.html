@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 1:4 Demultiplexer Experiment</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* (Similar to previous experiment's CSS, with minor modifications) */
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #28a745;
+            --text-color-light: #f4f4f4;
+            --text-color-dark: #121212;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: var(--text-color-light);
+            color: var(--text-color-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .experiment-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .demultiplexer-outputs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .output-pin {
+            background-color: #e9ecef;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .output-pin.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        /* (Rest of the CSS remains similar to previous experiments) */
+    </style>
+</head>
+<body>
+    <div class="dark-mode-toggle">
+        <button onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <div class="experiment-header">
+        <h1>🧪 1:4 Demultiplexer Implementation</h1>
+        <p>Route Single Input to Multiple Outputs!</p>
+    </div>
+
+    <div class="experiment-container">
+        <div class="selector-inputs">
+            <div class="selector-input">
+                <label>S1:</label>
+                <select id="selector1">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                </select>
+            </div>
+            <div class="selector-input">
+                <label>S0:</label>
+                <select id="selector0">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="input-data" id="input">Input</div>
+        </div>
+
+        <button class="select-btn" onclick="routeInput()">Route Input</button>
+
+        <div class="demultiplexer-outputs">
+            <div class="output-pin" id="output0">Output 0</div>
+            <div class="output-pin" id="output1">Output 1</div>
+            <div class="output-pin" id="output2">Output 2</div>
+            <div class="output-pin" id="output3">Output 3</div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function routeInput() {
+            const outputs = [
+                document.getElementById('output0'),
+                document.getElementById('output1'),
+                document.getElementById('output2'),
+                document.getElementById('output3')
+            ];
+
+            const selector1 = parseInt(document.getElementById('selector1').value);
+            const selector0 = parseInt(document.getElementById('selector0').value);
+
+            // Reset output styles
+            outputs.forEach(output => {
+                output.classList.remove('active');
+            });
+
+            // Calculate selected output index
+            const selectedIndex = selector1 * 2 + selector0;
+
+            // Activate selected output
+            outputs[selectedIndex].classList.add('active');
+        }
+    </script>
+</body>
+</html>

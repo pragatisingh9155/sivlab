@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study of Lab Equipment and Components</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .score-container {
+            text-align: right;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        #quiz-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        #question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin: 10px 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            background-color: #3498db;
+            color: white;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .dark-mode {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        .dark-mode .container {
+            background-color: #34495e;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .dark-mode #quiz-container {
+            background-color: #2c3e50;
+        }
+
+        .dark-mode input[type="text"] {
+            background-color: #465c74;
+            color: white;
+            border-color: #597393;
+        }
+
+        .dark-mode button {
+            background-color: #e74c3c;
+        }
+
+        .dark-mode button:hover {
+            background-color: #c0392b;
+        }
+
+        .dark-mode #question {
+            color: #ecf0f1;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #2ecc71;
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lab Equipment Study Game</h1>
+        <button id="toggle-dark-mode">Toggle Dark Mode</button>
+        <div class="score-container">
+            Score: <span id="score">0</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div id="quiz-container">
+            <p id="question"></p>
+            <input type="text" id="answer" placeholder="Type your answer here...">
+            <button id="submit-answer">Submit</button>
+            <button id="hint">Get Hint</button>
+            <p id="feedback"></p>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What does CRO stand for?",
+                answer: "Cathode Ray Oscilloscope",
+                hint: "It's a device that displays electrical signals graphically"
+            },
+            {
+                question: "What is the primary use of a multimeter?",
+                answer: "Measuring voltage, current, and resistance",
+                hint: "It's a measuring device that can measure three main electrical properties"
+            },
+            {
+                question: "What does a function generator do?",
+                answer: "Generates different types of electrical waveforms",
+                hint: "It creates various types of electrical signals like sine, square waves"
+            },
+            {
+                question: "What is the purpose of a power supply?",
+                answer: "Provides electrical power to a circuit",
+                hint: "It's the source of electrical energy in a circuit"
+            },
+            {
+                question: "What is a breadboard used for?",
+                answer: "Prototyping electronic circuits",
+                hint: "It's used for temporary circuit construction without soldering"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let hintsUsed = 0;
+
+        document.getElementById('toggle-dark-mode').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+
+        function updateProgress() {
+            const progress = (currentQuestionIndex / questions.length) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+        }
+
+        function loadQuestion() {
+            const questionElement = document.getElementById('question');
+            questionElement.textContent = questions[currentQuestionIndex].question;
+            document.getElementById('answer').value = '';
+            document.getElementById('feedback').textContent = '';
+            updateProgress();
+        }
+
+        document.getElementById('hint').addEventListener('click', () => {
+            const feedbackElement = document.getElementById('feedback');
+            feedbackElement.textContent = `Hint: ${questions[currentQuestionIndex].hint}`;
+            hintsUsed++;
+        });
+
+        document.getElementById('submit-answer').addEventListener('click', () => {
+            const userAnswer = document.getElementById('answer').value;
+            const feedbackElement = document.getElementById('feedback');
+
+            if (userAnswer.toLowerCase() === questions[currentQuestionIndex].answer.toLowerCase()) {
+                feedbackElement.textContent = "Correct! 🎉";
+                feedbackElement.style.color = "#2ecc71";
+                score += (hintsUsed ? 5 : 10); // Less points if hint was used
+                document.getElementById('score').textContent = score;
+                currentQuestionIndex++;
+                hintsUsed = 0;
+
+                if (currentQuestionIndex < questions.length) {
+                    setTimeout(loadQuestion, 1000);
+                } else {
+                    feedbackElement.textContent = `Congratulations! You've completed the quiz! Final score: ${score}`;
+                    document.getElementById('answer').style.display = 'none';
+                    document.getElementById('submit-answer').style.display = 'none';
+                    document.getElementById('hint').style.display = 'none';
+                }
+            } else {
+                feedbackElement.textContent = "Try again! 🤔";
+                feedbackElement.style.color = "#e74c3c";
+            }
+        });
+
+        // Handle Enter key press
+        document.getElementById('answer').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('submit-answer').click();
+            }
+        });
+
+        // Load the first question
+        loadQuestion();
+    </script>
+</body>
+</html>

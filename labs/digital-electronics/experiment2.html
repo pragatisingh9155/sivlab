@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experiment 2: Boolean Function Implementation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #28a745;
+            --background-light: #f4f4f4;
+            --background-dark: #121212;
+            --text-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-light);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        .experiment-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .experiment-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .logic-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .result-display {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .theory-section {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="experiment-container">
+        <div class="experiment-header">
+            <h1>Experiment 2: Boolean Function Implementation</h1>
+            <p>Implementing Boolean Functions using Logic Gates</p>
+        </div>
+
+        <div class="section theory-section">
+            <h2>🔬 Theoretical Background</h2>
+            <p>In this experiment, we will explore the implementation of Boolean functions using logic gates in both Sum of Products (SOP) and Product of Sums (POS) forms. Boolean functions are mathematical expressions representing logical operations using variables and logic gates.</p>
+            <ul>
+                <li><strong>Sum of Products (SOP):</strong> A Boolean expression where terms are ANDed and then ORed together</li>
+                <li><strong>Product of Sums (POS):</strong> A Boolean expression where terms are ORed and then ANDed together</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🧩 Boolean Function Simulator</h2>
+            <div class="logic-form">
+                <div class="input-group">
+                    <label>Number of Variables:</label>
+                    <select id="variableCount" onchange="updateVariables()">
+                        <option value="2">2 Variables</option>
+                        <option value="3">3 Variables</option>
+                        <option value="4">4 Variables</option>
+                    </select>
+                </div>
+
+                <div id="variableInputs"></div>
+
+                <div class="input-group">
+                    <label>Implementation Type:</label>
+                    <select id="implementationType">
+                        <option value="sop">Sum of Products (SOP)</option>
+                        <option value="pos">Product of Sums (POS)</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="generateBooleanFunction()">Generate Function</button>
+
+                <div id="resultDisplay" class="result-display">
+                    Results will be shown here
+                </div>
+            </div>
+        </div>
+
+        <div class="section theory-section">
+            <h2>📝 Implementation Guidelines</h2>
+            <p>Follow these steps to implement Boolean functions:</p>
+            <ol>
+                <li>Determine the number of input variables</li>
+                <li>Create a truth table</li>
+                <li>Identify the minterms or maxterms</li>
+                <li>Construct the Boolean expression</li>
+                <li>Implement using appropriate logic gates</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function updateVariables() {
+            const variableCount = document.getElementById('variableCount').value;
+            const variableInputs = document.getElementById('variableInputs');
+            variableInputs.innerHTML = ''; // Clear previous inputs
+
+            // Dynamic generation of variable inputs
+            for (let i = 0; i < Math.pow(2, variableCount); i++) {
+                const row = document.createElement('div');
+                row.className = 'input-group';
+
+                // Generate binary representation of row index
+                const binaryRow = i.toString(2).padStart(variableCount, '0');
+                
+                // Create input for each combination
+                row.innerHTML = `
+                    <span>Input Combination (${binaryRow}): </span>
+                    <select id="output_${i}">
+                        <option value="0">0 (False)</option>
+                        <option value="1">1 (True)</option>
+                    </select>
+                `;
+                variableInputs.appendChild(row);
+            }
+        }
+
+        function generateBooleanFunction() {
+            const variableCount = parseInt(document.getElementById('variableCount').value);
+            const implementationType = document.getElementById('implementationType').value;
+            const resultDisplay = document.getElementById('resultDisplay');
+
+            // Collect output values
+            const outputValues = [];
+            for (let i = 0; i < Math.pow(2, variableCount); i++) {
+                const outputSelect = document.getElementById(`output_${i}`);
+                outputValues.push(parseInt(outputSelect.value));
+            }
+
+            let booleanExpression = '';
+            const variables = ['A', 'B', 'C', 'D'].slice(0, variableCount);
+
+            if (implementationType === 'sop') {
+                // Sum of Products (SOP) generation
+                const minterms = outputValues.reduce((terms, val, index) => {
+                    if (val === 1) {
+                        const binaryIndex = index.toString(2).padStart(variableCount, '0');
+                        const term = binaryIndex.split('').map((bit, j) => 
+                            bit === '0' ? `~${variables[j]}` : variables[j]
+                        ).join(' * ');
+                        terms.push(`(${term})`);
+                    }
+                    return terms;
+                }, []);
+                booleanExpression = minterms.join(' + ');
+            } else {
+                // Product of Sums (POS) generation
+                const maxterms = outputValues.reduce((terms, val, index) => {
+                    if (val === 0) {
+                        const binaryIndex = index.toString(2).padStart(variableCount, '0');
+                        const term = binaryIndex.split('').map((bit, j) => 
+                            bit === '0' ? variables[j] : `~${variables[j]}`
+                        ).join(' + ');
+                        terms.push(`(${term})`);
+                    }
+                    return terms;
+                }, []);
+                booleanExpression = maxterms.join(' * ');
+            }
+
+            resultDisplay.innerHTML = `
+                <h3>Boolean Function Result:</h3>
+                <p><strong>Type:</strong> ${implementationType.toUpperCase()}</p>
+                <p><strong>Expression:</strong> ${booleanExpression}</p>
+                <p><strong>Gate Implementation:</strong> Can be realized using AND, OR, and NOT gates</p>
+            `;
+        }
+
+        // Initialize with default variables
+        updateVariables();
+    </script>
+</body>
+</html>

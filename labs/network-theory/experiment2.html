@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Superposition Theorem Simulator</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .simulator-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
+        }
+        .circuit-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .input-group input {
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        #calculateBtn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 15px;
+        }
+        #calculateBtn:hover {
+            background-color: #2980b9;
+        }
+        #results {
+            background-color: #f1f3f5;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        #verificationStatus {
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #explanation {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="simulator-container">
+        <h1 style="text-align: center; color: #2c3e50;">Superposition Theorem Interactive Simulator</h1>
+        
+        <a href="#" title="Superposition Theorem Circuit">
+            <img 
+                id="circuitImage" 
+                class="circuit-image" 
+                src="" 
+                alt="Superposition Theorem Circuit Diagram - A circuit with multiple voltage sources and resistors demonstrating the superposition principle"
+            >
+        </a>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label>Voltage Source 1 (V)</label>
+                <input type="number" id="source1Voltage" value="5" min="0">
+            </div>
+            <div class="input-group">
+                <label>Voltage Source 2 (V)</label>
+                <input type="number" id="source2Voltage" value="3" min="0">
+            </div>
+            <div class="input-group">
+                <label>Resistance R1 (Ω)</label>
+                <input type="number" id="resistance1" value="100" min="1">
+            </div>
+            <div class="input-group">
+                <label>Resistance R2 (Ω)</label>
+                <input type="number" id="resistance2" value="200" min="1">
+            </div>
+            <div class="input-group">
+                <label>Resistance R3 (Ω)</label>
+                <input type="number" id="resistance3" value="300" min="1">
+            </div>
+        </div>
+
+        <button id="calculateBtn">Calculate Superposition</button>
+
+        <div id="results">
+            <p id="source1Contribution">Voltage Contribution from Source 1: 0 V</p>
+            <p id="source2Contribution">Voltage Contribution from Source 2: 0 V</p>
+            <p id="totalVoltage"><strong>Total Voltage: 0 V</strong></p>
+        </div>
+
+        <div id="verificationStatus"></div>
+
+        <div id="explanation">
+            <h3>🧠 Challenge Mode</h3>
+            <p>Verify the superposition theorem by comparing individual source contributions with the total voltage.</p>
+            <p>Hint: Total Voltage should equal the sum of individual voltage contributions!</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            const source1Voltage = parseFloat(document.getElementById('source1Voltage').value);
+            const source2Voltage = parseFloat(document.getElementById('source2Voltage').value);
+            const resistance1 = parseFloat(document.getElementById('resistance1').value);
+            const resistance2 = parseFloat(document.getElementById('resistance2').value);
+            const resistance3 = parseFloat(document.getElementById('resistance3').value);
+
+            const totalResistance = resistance1 + resistance2 + resistance3;
+
+            const currentSource1 = source1Voltage / totalResistance;
+            const voltageSource1 = currentSource1 * resistance3;
+
+            const currentSource2 = source2Voltage / totalResistance;
+            const voltageSource2 = currentSource2 * resistance3;
+
+            const totalVoltage = voltageSource1 + voltageSource2;
+
+            document.getElementById('source1Contribution').textContent = 
+                `Voltage Contribution from Source 1: ${voltageSource1.toFixed(2)} V`;
+            
+            document.getElementById('source2Contribution').textContent = 
+                `Voltage Contribution from Source 2: ${voltageSource2.toFixed(2)} V`;
+            
+            document.getElementById('totalVoltage').innerHTML = 
+                `<strong>Total Voltage: ${totalVoltage.toFixed(2)} V</strong>`;
+
+            verifySuperposition(totalVoltage, voltageSource1, voltageSource2);
+        });
+
+        function verifySuperposition(totalVoltage, source1Contribution, source2Contribution) {
+            const tolerance = 0.01; // Allows for small floating-point discrepancies
+            const calculatedTotal = source1Contribution + source2Contribution;
+            const isVerified = Math.abs(totalVoltage - calculatedTotal) < tolerance;
+
+            const verificationStatus = document.getElementById('verificationStatus');
+            verificationStatus.textContent = isVerified 
+                ? '✅ Superposition Theorem VERIFIED!' 
+                : '❌ Verification FAILED! Check your calculations.';
+            
+            verificationStatus.className = isVerified ? 'success' : 'error';
+
+            return isVerified;
+        }
+    </script>
+</body>
+</html>

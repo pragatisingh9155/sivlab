@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Digital Electronics Interactive Lab</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #28a745;
+            --text-color-light: #f4f4f4;
+            --text-color-dark: #121212;
+            --hover-color: #0056b3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: var(--text-color-light);
+            color: var(--text-color-dark);
+        }
+
+        body.dark-mode {
+            background-color: var(--text-color-dark);
+            color: var(--text-color-light);
+        }
+
+        /* Gamified Header */
+        .lab-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lab-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .lab-header .level-badge {
+            background-color: #ffc107;
+            color: black;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* Navigation */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            transform: scale(1.05);
+            background-color: var(--hover-color);
+        }
+
+        /* Content Sections */
+        .content-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section.hidden {
+            display: none;
+        }
+
+        /* Experiment List */
+        .experiment-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .experiment-card {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .experiment-card:hover {
+            transform: scale(1.02);
+            background-color: var(--secondary-color);
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .dark-mode-toggle button {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .lab-header h1 {
+                font-size: 2rem;
+            }
+            .nav-container {
+                flex-direction: column;
+            }
+        }
+
+        /* List Styles */
+        .content-section ul {
+            list-style-type: disc;
+            padding-left: 30px;
+            margin: 15px 0;
+        }
+
+        .content-section li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+        <button onclick="toggleDarkMode()" title="Toggle Dark Mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Gamified Header -->
+    <header class="lab-header">
+        <h1>
+            🧪 Digital Electronics Lab 
+            <span class="level-badge">Beginner Level</span>
+        </h1>
+        <p>Interactive Learning for Electronic Systems! 🚀⚡</p>
+    </header>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-container">
+        <button class="nav-button" onclick="showSection('intro')">
+            <i class="fas fa-book-open"></i> Introduction
+        </button>
+        <button class="nav-button" onclick="showSection('objective')">
+            <i class="fas fa-bullseye"></i> Objectives
+        </button>
+        <button class="nav-button" onclick="showSection('experiments')">
+            <i class="fas fa-flask"></i> Experiments
+        </button>
+        <button class="nav-button" onclick="showSection('target')">
+            <i class="fas fa-users"></i> Target Audience
+        </button>
+        <button class="nav-button" onclick="showSection('course')">
+            <i class="fas fa-graduation-cap"></i> Course Alignment
+        </button>
+    </div>
+
+    <!-- Content Sections -->
+    <div id="intro" class="content-section">
+        <h2>🌟 Welcome to Digital Electronics Lab!</h2>
+        <p>Welcome to the Digital Electronics Lab! This lab offers a hands-on learning experience where students can explore and experiment with a variety of electrical components. Whether you're a beginner or a seasoned learner, you'll find that this lab presents challenges that are both fun and educational.</p>
+    </div>
+
+    <div id="objective" class="content-section hidden">
+        <h2>🎯 Lab Objectives</h2>
+        <p>The primary objective of this Digital Electronics Lab is to provide students with a practical understanding of Network Theory. Here's what you'll achieve:</p>
+        <ul>
+            <li>🔍 Enhance understanding of fundamental electrical principles</li>
+            <li>🛠️ Develop troubleshooting skills for analyzing circuits</li>
+            <li>💡 Simulate and modify circuits before physical implementation</li>
+            <li>🏆 Provide an interactive approach to learning that motivates students</li>
+        </ul>
+    </div>
+
+    <div id="experiments" class="content-section hidden">
+        <h2>🧪 Experiment Catalog</h2>
+        <div class="experiment-grid">
+            <div class="experiment-card" onclick="openExperiment('exp1')">
+                <i class="fas fa-bolt"></i> Introduction to digital electronics lab- nomenclature of digital ICs, specifications, study of the data sheet, Concept of Vcc and ground, verification of the truth tables of logic gates using TTL ICs
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp2')">
+                <i class="fas fa-circle-notch"></i> Implementation of the given Boolean function using logic gates in both SOP and POS forms
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp3')">
+                <i class="fas fa-plug"></i> Verification of state tables of RS, JK, T and D flip-flops using NAND & NOR gates
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp4')">
+                <i class="fas fa-lightbulb"></i> Implementation and verification of Decoder using logic gates
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp5')">
+                <i class="fas fa-solar-panel"></i> Implementation and verification of Encoder using logic gates
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp6')">
+                <i class="fas fa-tasks"></i> Implementation of 4:1 multiplexer using logic gates
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp7')">
+                <i class="fas fa-microchip"></i> Implementation of 1:4 demultiplexer using logic gates
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp8')">
+                <i class="fas fa-project-diagram"></i> Implementation of 4-bit parallel adder using 7483 IC
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp9')">
+                <i class="fas fa-expand-arrows-alt"></i> Design, and verify the 4-bit synchronous counter
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp10')">
+                <i class="fas fa-calculator"></i> Design, and verify the 4-bit asynchronous counter
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp11')">
+                <i class="fas fa-cogs"></i> Implementation of Mini Project using digital integrated circuits and other components
+            </div>
+        </div>
+    </div>
+
+    <div id="target" class="content-section hidden">
+        <h2>👥 Target Audience</h2>
+        <p>This lab is designed for undergraduate students in Electronics and Electrical Engineering, providing an opportunity to explore the world of electronics through hands-on, virtual experiments. It is also suitable for hobbyists, engineers, and anyone interested in learning about the foundational components of electronic circuits.</p>
+    </div>
+
+    <div id="course" class="content-section hidden">
+        <h2>🎓 Course Alignment</h2>
+        <p>The Digital Electronics Lab aligns with key courses in the Electronics and Electrical Engineering curriculum, particularly in Circuit Theory, Digital Systems, and Electronic Design. It serves as a complement to theoretical learning by providing students with practical experience that enhances their understanding of key concepts.</p>
+    </div>
+
+    <script>
+        // Dark Mode Toggle Function
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Show Specific Section Function
+        function showSection(sectionId) {
+            // Hide all sections
+            ['intro', 'objective', 'experiments', 'target', 'course'].forEach(id => {
+                const section = document.getElementById(id);
+                section.classList.add('hidden');
+            });
+
+            // Show selected section
+            const selectedSection = document.getElementById(sectionId);
+            selectedSection.classList.remove('hidden');
+        }
+
+        // Experiment Navigation Function
+        function openExperiment(experimentId) {
+            // Map experiment IDs to their corresponding HTML files
+            const experimentFiles = {
+                'exp1': 'experiment1.html',
+                'exp2': 'experiment2.html',
+                'exp3': 'experiment3.html',
+                'exp4': 'experiment4.html',
+                'exp5': 'experiment5.html',
+                'exp6': 'experiment6.html',
+                'exp7': 'experiment7.html',
+                'exp8': 'experiment8.html',
+                'exp9': 'experiment9.html',
+                'exp10': 'experiment10.html',
+                'exp11': 'experiment11.html'
+            };
+
+            // Check if the experiment file exists in our mapping
+            if (experimentFiles[experimentId]) {
+                // Redirect to the specific experiment HTML file
+                window.location.href = experimentFiles[experimentId];
+            } else {
+                // Fallback alert if no matching file is found
+                alert(`Experiment ${experimentId} is not available.`);
+            }
+        }
+
+        // Default to intro section on page load
+        showSection('intro');
+    </script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Encoder Implementation Experiment</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #28a745;
+            --text-color-light: #f4f4f4;
+            --text-color-dark: #121212;
+            --hover-color: #0056b3;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: var(--text-color-light);
+            color: var(--text-color-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background-color: var(--text-color-dark);
+            color: var(--text-color-light);
+        }
+
+        .experiment-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .experiment-container {
+            background-color: #222;
+        }
+
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .dark-mode-toggle button {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .experiment-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .encoder-input {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-pin {
+            background-color: #e9ecef;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .input-pin.active {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .encoder-output {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .output-bit {
+            background-color: #e9ecef;
+            padding: 15px;
+            width: 50px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .output-bit.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .encode-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .encode-button:hover {
+            transform: scale(1.05);
+            background-color: var(--hover-color);
+        }
+
+        .instruction {
+            text-align: center;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 600px) {
+            .encoder-input {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+        <button onclick="toggleDarkMode()" title="Toggle Dark Mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Experiment Header -->
+    <div class="experiment-header">
+        <h1>🧪 4-to-2 Priority Encoder Implementation</h1>
+        <p>Explore Priority Encoding Logic!</p>
+    </div>
+
+    <!-- Experiment Container -->
+    <div class="experiment-container">
+        <div class="instruction">
+            Click on input pins to activate. Highest priority active pin determines output.
+        </div>
+
+        <!-- Encoder Input Pins -->
+        <div class="encoder-input">
+            <div class="input-pin" data-pin="3" onclick="togglePin(3)">Input 3</div>
+            <div class="input-pin" data-pin="2" onclick="togglePin(2)">Input 2</div>
+            <div class="input-pin" data-pin="1" onclick="togglePin(1)">Input 1</div>
+            <div class="input-pin" data-pin="0" onclick="togglePin(0)">Input 0</div>
+        </div>
+
+        <button class="encode-button" onclick="encodeInput()">
+            Encode Input <i class="fas fa-arrow-right"></i>
+        </button>
+
+        <!-- Encoder Output -->
+        <div class="encoder-output">
+            <div class="output-bit" id="output1">A1</div>
+            <div class="output-bit" id="output0">A0</div>
+        </div>
+    </div>
+
+    <script>
+        // Dark Mode Toggle Function
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Toggle Individual Input Pin
+        function togglePin(pinNumber) {
+            const pin = document.querySelector(`.input-pin[data-pin="${pinNumber}"]`);
+            pin.classList.toggle('active');
+
+            // Deactivate other pins when one is activated
+            const allPins = document.querySelectorAll('.input-pin');
+            allPins.forEach(otherPin => {
+                if (otherPin !== pin) {
+                    otherPin.classList.remove('active');
+                }
+            });
+        }
+
+        // Encoder Logic Function
+        function encodeInput() {
+            // Reset output bits
+            const outputBits = document.querySelectorAll('.output-bit');
+            outputBits.forEach(bit => bit.classList.remove('active'));
+
+            // Get active input pins
+            const activePins = document.querySelectorAll('.input-pin.active');
+
+            if (activePins.length === 0) {
+                alert('Please activate at least one input pin');
+                return;
+            }
+
+            // Find the highest priority active pin (lowest pin number)
+            const highestPriorityPin = Array.from(activePins)
+                .reduce((highest, current) => {
+                    return parseInt(current.dataset.pin) < parseInt(highest.dataset.pin) 
+                        ? current 
+                        : highest;
+                });
+
+            // Convert pin number to binary output
+            const pinNumber = parseInt(highestPriorityPin.dataset.pin);
+            const binary = pinNumber.toString(2).padStart(2, '0');
+
+            // Activate corresponding output bits
+            document.getElementById('output1').textContent = binary[0];
+            document.getElementById('output0').textContent = binary[1];
+            
+            document.getElementById('output1').classList.add('active');
+            document.getElementById('output0').classList.add('active');
+        }
+    </script>
+</body>
+</html>

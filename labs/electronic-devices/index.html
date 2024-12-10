@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Basic Electronics Lab: Interactive Learning</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #28a745;
+            --text-color-light: #f4f4f4;
+            --text-color-dark: #121212;
+            --hover-color: #0056b3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: var(--text-color-light);
+            color: var(--text-color-dark);
+        }
+
+        body.dark-mode {
+            background-color: var(--text-color-dark);
+            color: var(--text-color-light);
+        }
+
+        /* Gamified Header */
+        .lab-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lab-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .lab-header .level-badge {
+            background-color: #ffc107;
+            color: black;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* Navigation */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            transform: scale(1.05);
+            background-color: var(--hover-color);
+        }
+
+        /* Content Sections */
+        .content-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section.hidden {
+            display: none;
+        }
+
+        /* Experiment List */
+        .experiment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .experiment-card {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .experiment-card:hover {
+            transform: scale(1.05);
+            background-color: var(--secondary-color);
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .dark-mode-toggle button {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .lab-header h1 {
+                font-size: 2rem;
+            }
+            .nav-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+        <button onclick="toggleDarkMode()" title="Toggle Dark Mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Gamified Header -->
+    <header class="lab-header">
+        <h1>
+            🧪 Basic Electronics Lab 
+            <span class="level-badge">Beginner Level</span>
+        </h1>
+        <p>Explore the World of Electronic Components! 🚀⚡</p>
+    </header>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-container">
+        <button class="nav-button" onclick="showSection('intro')">
+            <i class="fas fa-book-open"></i> Introduction
+        </button>
+        <button class="nav-button" onclick="showSection('objective')">
+            <i class="fas fa-bullseye"></i> Objectives
+        </button>
+        <button class="nav-button" onclick="showSection('experiments')">
+            <i class="fas fa-flask"></i> Experiments
+        </button>
+        <button class="nav-button" onclick="showSection('audience')">
+            <i class="fas fa-users"></i> Target Audience
+        </button>
+    </div>
+
+    <!-- Content Sections -->
+    <div id="intro" class="content-section">
+        <h2>🌟 Welcome to Basic Electronics Lab!</h2>
+        <p>Embark on an electrifying journey through the world of electronic components! Our interactive lab transforms complex electronics into an engaging, fun learning experience. Dive deep into experiments, explore fundamental circuits, and unlock your inner electrical engineer! 🔋🧠</p>
+    </div>
+
+    <div id="objective" class="content-section hidden">
+        <h2>🎯 Lab Objectives</h2>
+        <p>By the end of this lab, you'll:</p>
+        <ul>
+            <li>🔍 Understand fundamental electronic components</li>
+            <li>🛠️ Develop circuit analysis skills</li>
+            <li>💡 Learn practical applications of electronic devices</li>
+            <li>🏆 Gain hands-on experimental experience</li>
+        </ul>
+    </div>
+
+    <div id="experiments" class="content-section hidden">
+        <h2>🧪 Experiment Catalog</h2>
+        <div class="experiment-grid">
+            <div class="experiment-card" onclick="openExperiment('experiment1.html')">
+                <i class="fas fa-bolt"></i> Study of lab equipment
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp2')">
+                <i class="fas fa-circle-notch"></i> P-N Junction Diode
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp3')">
+                <i class="fas fa-plug"></i> PN Junction Diode Applications
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp4')">
+                <i class="fas fa-bolt"></i> Zener Diode Characteristics
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp5')">
+                <i class="fas fa-lightbulb"></i> Photo Diode Characteristics
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp6')">
+                <i class="fas fa-solar-panel"></i> Solar Cell Characteristics
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp7')">
+                <i class="fas fa-tasks"></i> Zener Diode Application
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp8')">
+                <i class="fas fa-microchip"></i> BJT Characteristics
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp9')">
+                <i class="fas fa-project-diagram"></i> Field Effect Transistors
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp10')">
+                <i class="fas fa-expand-arrows-alt"></i> MOSFET Amplifier
+            </div>
+            <div class="experiment-card" onclick="openExperiment('exp11')">
+                <i class="fas fa-calculator"></i> Amplifier Circuits Simulation
+            </div>
+        </div>
+    </div>
+
+    <div id="audience" class="content-section hidden">
+        <h2>👥 Who Can Join?</h2>
+        <p>🎓 Electronics Engineering Students
+        🔬 Electronic Component Enthusiasts
+        💼 Electrical Engineering Professionals
+        🌐 Curious Learners</p>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            ['intro', 'objective', 'experiments', 'audience'].forEach(id => {
+                const section = document.getElementById(id);
+                section.classList.add('hidden');
+            });
+
+            // Show selected section
+            const selectedSection = document.getElementById(sectionId);
+            selectedSection.classList.remove('hidden');
+        }
+
+        function openExperiment(experimentId) {
+            // In a real implementation, this would open the specific experiment
+            alert(`Opening experiment: ${experimentId}`);
+        }
+
+        // Default to intro section
+        showSection('intro');
+    </script>
+</body>
+</html>

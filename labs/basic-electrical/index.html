@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Theory Lab🧪</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    h1, h2, p {
+      text-align: center;
+    }
+
+    /* Dark Mode */
+    body.dark-mode {
+      background-color: #121212;
+      color: #fff;
+    }
+
+    /* Light Mode */
+    body.light-mode {
+      background-color: #f4f4f4;
+      color: #000;
+    }
+
+    /* Button Styles */
+    .btn {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 15px 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.1);
+      background-color: #0056b3;
+    }
+
+    /* Hidden Content */
+    .content {
+      display: none;
+      padding: 20px;
+      background-color: #f4f4f4;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      margin: 20px 0;
+      transition: all 0.3s ease;
+    }
+
+    /* Show Content */
+    .content.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Header */
+    header {
+      background-color: #007BFF;
+      color: white;
+      padding: 30px 0;
+    }
+
+    /* Dark Mode Toggle */
+    .dark-mode-toggle {
+      display: flex;
+      justify-content: flex-end;
+      padding: 20px;
+    }
+
+    .dark-mode-toggle button {
+      background-color: #fff;
+      color: #007BFF;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* Content Section */
+    .content-section {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Experiment Buttons */
+    .experiment-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .experiment-list button {
+      margin: 10px;
+      width: 250px;
+      height: 80px;
+      font-size: 18px;
+      font-weight: bold;
+      background-color: #28a745;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .experiment-list button:hover {
+      transform: scale(1.1);
+      background-color: #218838;
+    }
+
+    /* Text Adjustments */
+    .content p {
+      color: inherit; /* Ensure text color inherits from the parent */
+      font-size: 18px;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body class="light-mode">
+  <!-- Dark Mode Toggle -->
+  <div class="dark-mode-toggle">
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </div>
+
+  <!-- Header Section -->
+  <header>
+    <h1>Network Theory Lab 🧪</h1>
+    <p>Interactive learning experience with experiments!</p>
+  </header>
+
+  <!-- Content Section -->
+  <div class="content-section">
+    <!-- Buttons to reveal content -->
+    <div class="experiment-list">
+      <button class="btn" onclick="showContent('intro')">Introduction</button>
+      <button class="btn" onclick="showContent('objective')">Objective</button>
+      <button class="btn" onclick="showContent('list')">List of Experiments</button>
+      <button class="btn" onclick="showContent('target')">Target Audience</button>
+      <button class="btn" onclick="showContent('course')">Course Alignment</button>
+      <button class="btn" onclick="showContent('feedback')">Feedback</button>
+    </div>
+
+    <!-- Content that will be shown when button is clicked -->
+    <div id="intro" class="content">
+      <h2>Introduction</h2>
+      <p>Welcome to the Network Theory Lab! This lab offers a hands-on learning experience where students can explore and experiment with a variety of electrical components. Whether you’re a beginner or a seasoned learner, you’ll find that this lab presents challenges that are both fun and educational. In this virtual environment, you will simulate real-world experiments using components such as diodes, transistors, resistors, capacitors, and more. Our goal is to make complex electrical concepts easy to understand and interactive, offering a Interactive learning experience that allows you to track progress and earn rewards!</p>
+    </div>
+
+    <div id="objective" class="content">
+      <h2>Objective</h2>
+      <p> primary objective of this Network Theory Lab is to provide students with a practical understanding of Network Theory. Through engaging, interactive experiments, students will develop the skills needed to analyze and design basic electrical circuits. From learning about essential components like Resistors ,Capacitors and Diodes to more advanced topics such as amplifiers and oscillators, this lab offers a comprehensive educational experience. The virtual nature of this lab allows you to conduct experiments remotely and gain hands-on experience that is typically reserved for physical labs, all while fostering collaboration and critical thinking.</p>
+      <p><b>This lab aims to:</b>
+        <ul>
+          <li>Enhance your understanding of fundamental electrical principles</li>
+          <li>Develop troubleshooting skills for analyzing circuits</li>
+          <li>Offer a platform to simulate and modify circuits before physical implementation</li>
+          <li>Provide a interactive approach to learning that motivates and rewards students</li>
+        </ul>
+      </p>
+    </div>
+
+    <div id="list" class="content">
+      <h2>List of Experiments</h2>
+      <ul>
+        <li><button class="btn" onclick="openExperiment('exp1')">Verification of Kirchhoff’s laws</button></li>
+        <li><button class="btn" onclick="openExperiment('exp2')">Verification of Superposition theorem</button></li>
+        <li><button class="btn" onclick="openExperiment('exp3')">Verification of Thevenin’s Theorem and Maximum power transfer theorem</button></li>
+        <li><button class="btn" onclick="openExperiment('exp4')">Verification of Tallegen's theorem</button></li>
+        <li><button class="btn" onclick="openExperiment('exp5')">Measurement of power and power factor in a single phase AC series inductive
+            circuit and study improvement of power factor using capacitor</button></li>
+        <li><button class="btn" onclick="openExperiment('exp6')">Study of phenomenon of resonance in RLC series circuit and obtain resonant
+            frequency</button></li>
+        <li><button class="btn" onclick="openExperiment('exp7')">Determination of parameters of AC single phase series RLC circuit</button></li>
+        <li><button class="btn" onclick="openExperiment('exp8')">To find poles and zeros of immittance function</button></li>
+        <li><button class="btn" onclick="openExperiment('exp9')">Design and find cut-off frequency of low pass and high pass filters</button></li>
+        <li><button class="btn" onclick="openExperiment('exp10')">Design and find the pass band frequencies of band pass filters</button></li>
+        <li><button class="btn" onclick="openExperiment('exp11')">. Design and find the stop band frequencies of band reject filters</button></li>
+      </ul>
+    </div>
+
+    <div id="target" class="content">
+      <h2>Target Audience</h2>
+      <p>This lab is designed for undergraduate students in Electronics and Electrical Engineering, providing an opportunity to explore the world of electronics through hands-on, virtual experiments. It is also suitable for hobbyists, engineers, and anyone interested in learning about the foundational components of electronic circuits. Whether you are preparing for exams or just curious about how things work, this lab is your gateway to practical learning.</p>
+    </div>
+
+    <div id="course" class="content">
+      <h2>Course Alignment</h2>
+      <p>The Basic Electrical Lab aligns with key courses in the Electronics and Electrical Engineering curriculum, particularly in the areas of Circuit Theory, Analog Electronics, and Digital Systems. It serves as a complement to theoretical learning by providing students with practical experience that enhances their understanding of key concepts such as Ohm’s Law, Kirchhoff’s Laws, and the behavior of diodes and transistors. This lab also prepares students for more advanced topics, such as amplifier design and signal processing.</p>
+    </div>
+
+    <div id="feedback" class="content">
+      <h2>Feedback</h2>
+      <p>Your feedback is essential for improving this lab and making it even more engaging and effective. After completing the experiments, please provide your suggestions on how we can enhance the learning experience. Whether it’s adding new features, improving simulations, or updating the instructions, we value your input and are always striving to improve!</p>
+    </div>
+  </div>
+
+  <!-- Script to handle content toggling -->
+  <script>
+    function toggleDarkMode() {
+      const body = document.body;
+      body.classList.toggle("dark-mode");
+      body.classList.toggle("light-mode");
+    }
+
+    function showContent(id) {
+      const contentSections = document.querySelectorAll('.content');
+      contentSections.forEach(section => {
+        section.classList.remove('show');
+      });
+
+      const selectedContent = document.getElementById(id);
+      selectedContent.classList.add('show');
+    }
+  </script>
+</body>
+</html>

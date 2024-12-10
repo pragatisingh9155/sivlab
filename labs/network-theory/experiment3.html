@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thevenin's Theorem Simulator</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .simulator-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 900px;
+        }
+        .circuit-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+        }
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .input-group input {
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        .input-group input:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        #calculateBtn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        #calculateBtn:hover {
+            background-color: var(--primary-color);
+        }
+        #results {
+            background-color: #f1f3f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        #verificationStatus {
+            text-align: center;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #explanation {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.9em;
+        }
+        .result-label {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="simulator-container">
+        <h1 style="text-align: center; color: var(--primary-color);">Thevenin's Theorem Interactive Simulator</h1>
+        
+        <a href="#" title="Thevenin's Theorem Circuit">
+            <img 
+                id="circuitImage" 
+                class="circuit-image" 
+                src="" 
+                alt="Thevenin's Theorem Circuit Diagram - A complex circuit demonstrating equivalent voltage and resistance sources"
+            >
+        </a>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label>Source Voltage (V)</label>
+                <input type="number" id="sourceVoltage" value="12" min="0">
+            </div>
+            <div class="input-group">
+                <label>R1 (Ω)</label>
+                <input type="number" id="resistance1" value="100" min="1">
+            </div>
+            <div class="input-group">
+                <label>R2 (Ω)</label>
+                <input type="number" id="resistance2" value="200" min="1">
+            </div>
+            <div class="input-group">
+                <label>R3 (Ω)</label>
+                <input type="number" id="resistance3" value="300" min="1">
+            </div>
+            <div class="input-group">
+                <label>Load Resistance (Ω)</label>
+                <input type="number" id="loadResistance" value="250" min="1">
+            </div>
+        </div>
+
+        <button id="calculateBtn">Calculate Thevenin Equivalent</button>
+
+        <div id="results">
+            <p>
+                <span class="result-label">Thevenin Voltage (V_th):</span>
+                <span id="theveninVoltage">0 V</span>
+            </p>
+            <p>
+                <span class="result-label">Thevenin Equivalent Resistance (R_th):</span>
+                <span id="theveninResistance">0 Ω</span>
+            </p>
+            <p>
+                <span class="result-label">Load Current (I_L):</span>
+                <span id="loadCurrent">0 A</span>
+            </p>
+        </div>
+
+        <div id="verificationStatus"></div>
+
+        <div id="explanation">
+            <h3>🧠 Thevenin's Theorem Challenge</h3>
+            <p>Verify the Thevenin equivalent circuit by:</p>
+            <ol>
+                <li>Calculating the open-circuit voltage (V_th)</li>
+                <li>Determining the equivalent resistance (R_th)</li>
+                <li>Computing the load current using V_th and equivalent circuit</li>
+            </ol>
+            <p>Hint: The load current should match the current calculated using the original circuit!</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            // Get input values
+            const sourceVoltage = parseFloat(document.getElementById('sourceVoltage').value);
+            const r1 = parseFloat(document.getElementById('resistance1').value);
+            const r2 = parseFloat(document.getElementById('resistance2').value);
+            const r3 = parseFloat(document.getElementById('resistance3').value);
+            const loadResistance = parseFloat(document.getElementById('loadResistance').value);
+
+            // Step 1: Calculate Thevenin Voltage (Open Circuit Voltage)
+            // For this example, we'll use a simplified method
+            const theveninVoltage = sourceVoltage * (r3 / (r1 + r2 + r3));
+
+            // Step 2: Calculate Thevenin Equivalent Resistance
+            // Remove the load and calculate equivalent resistance
+            const theveninResistance = r1 + r2;
+
+            // Step 3: Calculate Load Current
+            const loadCurrent = theveninVoltage / (theveninResistance + loadResistance);
+
+            // Step 4: Verify Thevenin's Theorem
+            const originalCircuitCurrent = verifyTheveninTheorem(
+                sourceVoltage, r1, r2, r3, loadResistance
+            );
+
+            // Update Results
+            document.getElementById('theveninVoltage').textContent = theveninVoltage.toFixed(2) + ' V';
+            document.getElementById('theveninResistance').textContent = theveninResistance.toFixed(2) + ' Ω';
+            document.getElementById('loadCurrent').textContent = loadCurrent.toFixed(4) + ' A';
+        });
+
+        function verifyTheveninTheorem(V, R1, R2, R3, RL) {
+            // Calculate current in original circuit
+            const totalResistance = R1 + R2 + R3;
+            const originalLoadCurrent = V * R3 / (totalResistance * (R3 + RL));
+
+            const verificationStatus = document.getElementById('verificationStatus');
+            const tolerance = 0.001; // Allow small floating-point differences
+
+            // Simulated verification (you'd replace with actual calculated values)
+            const theveninVoltage = V * (R3 / (R1 + R2 + R3));
+            const theveninResistance = R1 + R2;
+            const theveninLoadCurrent = theveninVoltage / (theveninResistance + RL);
+
+            const isVerified = Math.abs(originalLoadCurrent - theveninLoadCurrent) < tolerance;
+
+            verificationStatus.textContent = isVerified 
+                ? '✅ Thevenin\'s Theorem VERIFIED!' 
+                : '❌ Verification FAILED! Check your calculations.';
+            
+            verificationStatus.className = isVerified ? 'success' : 'error';
+
+            return originalLoadCurrent;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification of Kirchhoff's Laws</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+        .experiment-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .circuit-diagram {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .circuit-diagram img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .result-display {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="experiment-container">
+        <h1>🔌 Verification of Kirchhoff's Laws</h1>
+        
+        <div class="circuit-diagram">
+            <img src="/api/placeholder/600/400" alt="Kirchhoff's Laws Circuit Diagram" />
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label>Voltage Source V1 (V):</label>
+                <input type="number" id="voltage1" placeholder="Enter V1">
+            </div>
+            <div class="input-group">
+                <label>Resistance R1 (Ω):</label>
+                <input type="number" id="resistance1" placeholder="Enter R1">
+            </div>
+            <div class="input-group">
+                <label>Resistance R2 (Ω):</label>
+                <input type="number" id="resistance2" placeholder="Enter R2">
+            </div>
+            <div class="input-group">
+                <label>Resistance R3 (Ω):</label>
+                <input type="number" id="resistance3" placeholder="Enter R3">
+            </div>
+            <div class="input-group">
+                <label>Voltage Source V2 (V):</label>
+                <input type="number" id="voltage2" placeholder="Enter V2">
+            </div>
+            <div class="input-group">
+                <label>Voltage Source V3 (V):</label>
+                <input type="number" id="voltage3" placeholder="Enter V3">
+            </div>
+        </div>
+
+        <button class="btn" onclick="verifyKirchhoffLaws()">Verify Kirchhoff's Laws</button>
+
+        <div class="result-display" id="resultDisplay">
+            <h2>Experiment Results</h2>
+            <p id="kclResult">Kirchhoff's Current Law (KCL): Not calculated</p>
+            <p id="kvlResult">Kirchhoff's Voltage Law (KVL): Not calculated</p>
+        </div>
+
+        <div class="experiment-explanation">
+            <h2>Kirchhoff's Laws Explained</h2>
+            <h3>Kirchhoff's Current Law (KCL)</h3>
+            <p>KCL states that the total current entering a junction is equal to the total current leaving the junction. In mathematical terms, the sum of all currents at a node must equal zero.</p>
+            
+            <h3>Kirchhoff's Voltage Law (KVL)</h3>
+            <p>KVL states that the sum of all voltage drops and rises in a closed loop must equal zero. This law is fundamental in analyzing complex electrical circuits.</p>
+        </div>
+    </div>
+
+    <script>
+        function verifyKirchhoffLaws() {
+            // Get input values
+            const v1 = parseFloat(document.getElementById('voltage1').value);
+            const v2 = parseFloat(document.getElementById('voltage2').value);
+            const v3 = parseFloat(document.getElementById('voltage3').value);
+            const r1 = parseFloat(document.getElementById('resistance1').value);
+            const r2 = parseFloat(document.getElementById('resistance2').value);
+            const r3 = parseFloat(document.getElementById('resistance3').value);
+
+            // Validate inputs
+            if ([v1, v2, v3, r1, r2, r3].some(isNaN)) {
+                alert('Please enter valid values for all inputs');
+                return;
+            }
+
+            // Calculate currents using Ohm's Law
+            const i1 = v1 / r1;
+            const i2 = v2 / r2;
+            const i3 = v3 / r3;
+
+            // Verify Kirchhoff's Current Law (KCL)
+            const totalCurrentAtJunction = i1 + i2 + i3;
+            const kclVerification = Math.abs(totalCurrentAtJunction) < 0.001 ? 
+                'Verified ✅ (Sum of currents ≈ 0)' : 
+                'Not Verified ❌';
+
+            // Verify Kirchhoff's Voltage Law (KVL)
+            const totalVoltageLoop = v1 + v2 + v3 - (i1*r1 + i2*r2 + i3*r3);
+            const kvlVerification = Math.abs(totalVoltageLoop) < 0.001 ? 
+                'Verified ✅ (Sum of voltage drops ≈ 0)' : 
+                'Not Verified ❌';
+
+            // Update results display
+            document.getElementById('kclResult').textContent = 
+                `Kirchhoff's Current Law (KCL): ${kclVerification}`;
+            document.getElementById('kvlResult').textContent = 
+                `Kirchhoff's Voltage Law (KVL): ${kvlVerification}`;
+        }
+    </script>
+</body>
+</html>

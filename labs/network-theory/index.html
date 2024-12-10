@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔬 Network Theory Lab: Interactive Learning</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #28a745;
+            --text-color-light: #f4f4f4;
+            --text-color-dark: #121212;
+            --hover-color: #0056b3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: var(--text-color-light);
+            color: var(--text-color-dark);
+        }
+
+        body.dark-mode {
+            background-color: var(--text-color-dark);
+            color: var(--text-color-light);
+        }
+
+        /* Gamified Header */
+        .lab-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lab-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .lab-header .level-badge {
+            background-color: #ffc107;
+            color: black;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* Navigation */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .nav-button:hover {
+            transform: scale(1.05);
+            background-color: var(--hover-color);
+        }
+
+        /* Content Sections */
+        .content-section {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section.hidden {
+            display: none;
+        }
+
+        /* Experiment List */
+        .experiment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .experiment-card {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .experiment-card:hover {
+            transform: scale(1.05);
+            background-color: var(--secondary-color);
+        }
+
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .dark-mode-toggle button {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .lab-header h1 {
+                font-size: 2rem;
+            }
+            .nav-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+        <button onclick="toggleDarkMode()" title="Toggle Dark Mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Gamified Header -->
+    <header class="lab-header">
+        <h1>
+            🔬 Network Theory Lab 
+            <span class="level-badge">Beginner Level</span>
+        </h1>
+        <p>Unlock the Secrets of Electrical Circuits! 🚀⚡</p>
+    </header>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-container">
+        <button class="nav-button" onclick="showSection('intro')">
+            <i class="fas fa-book-open"></i> Introduction
+        </button>
+        <button class="nav-button" onclick="showSection('objective')">
+            <i class="fas fa-bullseye"></i> Objectives
+        </button>
+        <button class="nav-button" onclick="showSection('experiments')">
+            <i class="fas fa-flask"></i> Experiments
+        </button>
+        <button class="nav-button" onclick="showSection('audience')">
+            <i class="fas fa-users"></i> Target Audience
+        </button>
+    </div>
+
+    <!-- Content Sections -->
+    <div id="intro" class="content-section">
+        <h2>🌟 Welcome to Network Theory Lab!</h2>
+        <p>Embark on an electrifying journey through the world of electrical circuits! Our interactive lab transforms complex network theory into an engaging, fun learning experience. Dive deep into experiments, earn achievement badges, and unlock your inner electrical engineer! 🔋🧠</p>
+    </div>
+
+    <div id="objective" class="content-section hidden">
+        <h2>🎯 Lab Objectives</h2>
+        <p>By the end of this lab, you'll:</p>
+        <ul>
+            <li>🔍 Master fundamental electrical principles</li>
+            <li>🛠️ Develop advanced circuit analysis skills</li>
+            <li>💡 Understand complex network theories</li>
+            <li>🏆 Gain practical, hands-on experience</li>
+        </ul>
+    </div>
+
+    <div id="experiments" class="content-section hidden">
+        <h2>🧪 Experiment Catalog</h2>
+        <div class="experiment-grid">
+            <div class="experiment-card" onclick="openExperiment('experiment1.html')">
+                <i class="fas fa-bolt"></i> Kirchhoff's Laws
+            </div>
+            <div class="experiment-card" onclick="openExperiment('experiment2.html')">
+                <i class="fas fa-wave-square"></i> Superposition Theorem
+            </div>
+            <div class="experiment-card" onclick="openExperiment('experiment3.html')">
+                <i class="fas fa-calculator"></i> Thevenin's Theorem
+            </div>
+            <div class="experiment-card" onclick="openExperiment('experiment4.html')">
+                <i class="fas fa-ruler"></i> Tallegen's Theorem
+            </div>
+            <div class="experiment-card" onclick="openExperiment('experiment5.html')">
+                <i class="fas fa-charging-station"></i> Power & Power Factor
+            </div>
+            <div class="experiment-card" onclick="openExperiment('experiment6.html')">
+                <i class="fas fa-sync"></i> RLC Resonance
+            </div>
+            <div class="experiment-card" onclick="openExperiment('experiment7.html')">
+                <i class="fas fa-expand-arrows-alt"></i> RLC Circuit Parameters
+            </div>
+            <div class="experiment-card" onclick="openExperiment('experiment8.html')">
+                <i class="fas fa-magnet"></i> Immittance Function
+            </div>
+            <div class="experiment-card" onclick="openExperiment('experiment9.html')">
+                <i class="fas fa-filter"></i> Low & High Pass Filters
+            </div>
+            <div class="experiment-card" onclick="openExperiment('experiment10.html')">
+                <i class="fas fa-stream"></i> Band Pass Filters
+            </div>
+            <div class="experiment-card" onclick="openExperiment('experiment11.html')">
+                <i class="fas fa-cut"></i> Band Reject Filters
+            </div>
+        </div>
+    </div>
+
+    <div id="audience" class="content-section hidden">
+        <h2>👥 Who Can Join?</h2>
+        <p>🎓 Engineering Students
+        🔬 Electronics Enthusiasts
+        💼 Professional Engineers
+        🌐 Curious Learners</p>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            ['intro', 'objective', 'experiments', 'audience'].forEach(id => {
+                const section = document.getElementById(id);
+                section.classList.add('hidden');
+            });
+
+            // Show selected section
+            const selectedSection = document.getElementById(sectionId);
+            selectedSection.classList.remove('hidden');
+        }
+
+        function openExperiment(experimentFile) {
+            // Open the experiment in a new tab
+            window.open(experimentFile, '_blank');
+        }
+
+        // Default to intro section
+        showSection('intro');
+    </script>
+</body>
+</html>

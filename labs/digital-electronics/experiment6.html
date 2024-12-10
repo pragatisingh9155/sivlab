@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 4:1 Multiplexer Experiment</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #28a745;
+            --text-color-light: #f4f4f4;
+            --text-color-dark: #121212;
+            --hover-color: #0056b3;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: var(--text-color-light);
+            color: var(--text-color-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        body.dark-mode {
+            background-color: var(--text-color-dark);
+            color: var(--text-color-light);
+        }
+
+        .experiment-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .dark-mode-toggle button {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .experiment-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .multiplexer-inputs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-data {
+            background-color: #e9ecef;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .selector-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .selector-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .multiplexer-output {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .select-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .instruction {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="dark-mode-toggle">
+        <button onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <div class="experiment-header">
+        <h1>🧪 4:1 Multiplexer Implementation</h1>
+        <p>Select Input Based on Control Signals!</p>
+    </div>
+
+    <div class="experiment-container">
+        <div class="instruction">
+            Set data inputs and selector bits to route the output
+        </div>
+
+        <div class="multiplexer-inputs">
+            <div class="input-data" id="input0">Input 0</div>
+            <div class="input-data" id="input1">Input 1</div>
+            <div class="input-data" id="input2">Input 2</div>
+            <div class="input-data" id="input3">Input 3</div>
+        </div>
+
+        <div class="selector-inputs">
+            <div class="selector-input">
+                <label>S1:</label>
+                <select id="selector1">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                </select>
+            </div>
+            <div class="selector-input">
+                <label>S0:</label>
+                <select id="selector0">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="select-btn" onclick="selectInput()">Select Input</button>
+
+        <div class="multiplexer-output" id="output">Output: -</div>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function selectInput() {
+            const inputs = [
+                document.getElementById('input0'),
+                document.getElementById('input1'),
+                document.getElementById('input2'),
+                document.getElementById('input3')
+            ];
+
+            const selector1 = parseInt(document.getElementById('selector1').value);
+            const selector0 = parseInt(document.getElementById('selector0').value);
+
+            // Calculate selected input index
+            const selectedIndex = selector1 * 2 + selector0;
+
+            // Reset input styles
+            inputs.forEach(input => {
+                input.style.backgroundColor = '#e9ecef';
+                input.style.color = 'black';
+            });
+
+            // Highlight selected input
+            inputs[selectedIndex].style.backgroundColor = '#28a745';
+            inputs[selectedIndex].style.color = 'white';
+
+            // Update output
+            const output = document.getElementById('output');
+            output.textContent = `Output: Input ${selectedIndex}`;
+        }
+    </script>
+</body>
+</html>
