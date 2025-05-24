@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Interactive Virtual Lab - Gamified Learning</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #f0f4f8;
+            --secondary-bg: #ffffff;
+            --text-primary: #2c3e50;
+            --accent-color: #3498db;
+            --hover-color: #2980b9;
+            --dark-bg-primary: #121212;
+            --dark-bg-secondary: #1e1e1e;
+            --dark-text-primary: #e0e0e0;
+            --dark-accent-color: #bb86fc;
+            --dark-hover-color: #9b62fc;
+            --game-gold: #ffd700;
+            --game-green: #2ecc71;
+            --game-purple: #9b59b6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg-primary);
+            color: var(--dark-text-primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent-color);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            margin-top: 50px;
+            gap: 50px;
+        }
+
+        .hero-content {
+            flex: 1;
+            padding-right: 50px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+            animation: pulse 2s infinite;
+        }
+
+        .hero-image {
+            flex: 1;
+            position: relative;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .subject-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .subject-card .icon {
+            font-size: 3.5rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .subject-card:hover .icon {
+            transform: rotate(360deg);
+        }
+
+        .subject-card .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--game-gold);
+            color: black;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .dark-mode-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: rotate(180deg);
+        }
+
+        body.dark-mode .subject-card {
+            background-color: var(--dark-bg-secondary);
+            color: var(--dark-text-primary);
+        }
+
+        .gamification-banner {
+            background: linear-gradient(135deg, var(--accent-color), var(--game-purple));
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .gamification-banner h2 {
+            font-size: 2rem;
+        }
+
+        .achievements {
+            display: flex;
+            gap: 15px;
+        }
+
+        .achievement-icon {
+            background-color: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="ri-flask-line"></i> Virtual Lab
+            </div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#subjects">Subjects</a>
+                <a href="#gamification">Gamify</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+                <i id="dark-mode-icon" class="ri-moon-line"></i>
+            </button>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Gamified Virtual Engineering Labs</h1>
+                <p>Transform your learning experience with interactive, engaging virtual laboratories. Explore cutting-edge technologies, earn badges, and unlock your engineering potential!</p>
+                <a href="login.html" class="btn">Start Learning Journey</a>
+            </div>
+            <div class="hero-image">
+                <img src="Designer.jpeg" alt="Virtual Lab">
+            </div>
+        </section>
+
+        <section class="subjects-grid">
+            <div class="subject-card">
+                <span class="badge">1st year</span>
+                <i class="ri-radar-line icon"></i>
+                <h3>Basic Electrical</h3>
+                <p>Let's solve the complex networks and circuits.</p>
+            </div>
+            <div class="subject-card">
+                <span class="badge">1st year</span>
+                <i class="ri-radar-line icon"></i>
+                <h3>Basic Electronics</h3>
+                <p>Build the foundation of Semiconductor world.</p>
+            </div>
+            <div class="subject-card">
+                <span class="badge">2nd year</span>
+                <i class="ri-cpu-line icon"></i>
+                <h3>Digital Electronics</h3>
+                <p>Design and simulate digital circuits with interactive tools.</p>
+            </div>
+            <div class="subject-card">
+                <span class="badge">2nd year</span>
+                <i class="ri-microscope-line icon"></i>
+                <h3>Network Theory</h3>
+                <p>Advanced network simulation and protocol analysis.</p>
+            </div>
+            <div class="subject-card">
+                <span class="badge">2nd year</span>
+                <i class="ri-compasses-line icon"></i>
+                <h3>Communication</h3>
+                <p>Explore modern communication technologies.</p>
+            </div>
+            <div class="subject-card">
+                <span class="badge">2nd year</span>
+                <i class="ri-database-line icon"></i>
+                <h3>Electronic Devices</h3>
+                <p>Let's learn about flow of electrons and its motion</p>
+            </div>
+            <div class="subject-card">
+                <span class="badge">3rd year</span>
+                <i class="ri-robot-line icon"></i>
+                <h3>Control Systems</h3>
+                <p>Model and control complex engineering systems.</p>
+            </div>
+        </section>
+
+        <section class="gamification-banner">
+            <div>
+                <h2>🏆 Gamify Your Learning!</h2>
+                <p>Earn badges, track progress, and compete with peers.</p>
+            </div>
+            <div class="achievements">
+                <div class="achievement-icon">🚀</div>
+                <div class="achievement-icon">🏅</div>
+                <div class="achievement-icon">🧠</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const darkModeIcon = document.getElementById('dark-mode-icon');
+            darkModeIcon.classList.toggle('ri-moon-line');
+            darkModeIcon.classList.toggle('ri-sun-line');
+        }
+    </script>
+</body>
+</html>

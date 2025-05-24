@@ -5,75 +5,158 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verification of Kirchhoff's Laws</title>
     <style>
+        :root {
+            --bg-primary: #f4f4f4;
+            --bg-secondary: white;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --accent-color: #007bff;
+            --accent-color-hover: #0056b3;
+            --input-bg: #f9f9f9;
+            --result-bg: #e9ecef;
+        }
+
+        .dark-mode {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --accent-color: #4da6ff;
+            --accent-color-hover: #2980b9;
+            --input-bg: #2c2c2c;
+            --result-bg: #2a2a2a;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
-            background-color: #f4f4f4;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
         }
+
         .experiment-container {
-            background-color: white;
+            background-color: var(--bg-secondary);
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
         .circuit-diagram {
             width: 100%;
             max-width: 600px;
             margin: 20px auto;
             text-align: center;
         }
+
         .circuit-diagram img {
             max-width: 100%;
             height: auto;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
+        .mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .law-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .law-btn {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .law-btn.active {
+            background-color: var(--accent-color-hover);
+        }
+
         .input-section {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             margin-bottom: 20px;
         }
+
         .input-group {
-            background-color: #f9f9f9;
+            background-color: var(--input-bg);
             padding: 15px;
             border-radius: 10px;
+            color: var(--text-secondary);
         }
+
+        input {
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
         .btn {
             display: block;
             width: 200px;
             margin: 20px auto;
             padding: 10px;
-            background-color: #007bff;
+            background-color: var(--accent-color);
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         .btn:hover {
-            background-color: #0056b3;
+            background-color: var(--accent-color-hover);
         }
+
         .result-display {
-            background-color: #e9ecef;
+            background-color: var(--result-bg);
             padding: 20px;
             border-radius: 10px;
             text-align: center;
+            color: var(--text-primary);
         }
     </style>
 </head>
 <body>
+    <button class="mode-toggle" onclick="toggleDarkMode()">🌓 Toggle Mode</button>
+
     <div class="experiment-container">
         <h1>🔌 Verification of Kirchhoff's Laws</h1>
         
-        <div class="circuit-diagram">
-            <img src="/api/placeholder/600/400" alt="Kirchhoff's Laws Circuit Diagram" />
+        <div class="law-selector">
+            <button class="law-btn active" onclick="selectLaw('kvl')">KVL</button>
+            <button class="law-btn" onclick="selectLaw('kcl')">KCL</button>
         </div>
 
-        <div class="input-section">
+        <div class="circuit-diagram">
+            <img id="circuit-image" src="kirchhoff_circuit_diagram.png" alt="Circuit Diagram" />
+        </div>
+
+        <div class="input-section" id="kvl-inputs">
             <div class="input-group">
                 <label>Voltage Source V1 (V):</label>
                 <input type="number" id="voltage1" placeholder="Enter V1">
@@ -87,12 +170,12 @@
                 <input type="number" id="resistance2" placeholder="Enter R2">
             </div>
             <div class="input-group">
-                <label>Resistance R3 (Ω):</label>
-                <input type="number" id="resistance3" placeholder="Enter R3">
-            </div>
-            <div class="input-group">
                 <label>Voltage Source V2 (V):</label>
                 <input type="number" id="voltage2" placeholder="Enter V2">
+            </div>
+            <div class="input-group">
+                <label>Resistance R3 (Ω):</label>
+                <input type="number" id="resistance3" placeholder="Enter R3">
             </div>
             <div class="input-group">
                 <label>Voltage Source V3 (V):</label>
@@ -100,27 +183,90 @@
             </div>
         </div>
 
-        <button class="btn" onclick="verifyKirchhoffLaws()">Verify Kirchhoff's Laws</button>
+        <div class="input-section" id="kcl-inputs" style="display: none;">
+            <div class="input-group">
+                <label>Branch 1 Current (A):</label>
+                <input type="number" id="current1" placeholder="Enter I1">
+            </div>
+            <div class="input-group">
+                <label>Branch 2 Current (A):</label>
+                <input type="number" id="current2" placeholder="Enter I2">
+            </div>
+            <div class="input-group">
+                <label>Branch 3 Current (A):</label>
+                <input type="number" id="current3" placeholder="Enter I3">
+            </div>
+            <div class="input-group">
+                <label>Junction 1 Reference Current (A):</label>
+                <input type="number" id="junctionRef1" placeholder="Reference Current 1">
+            </div>
+            <div class="input-group">
+                <label>Junction 2 Reference Current (A):</label>
+                <input type="number" id="junctionRef2" placeholder="Reference Current 2">
+            </div>
+        </div>
+
+        <button class="btn" onclick="verifyLaw()">Verify Law</button>
 
         <div class="result-display" id="resultDisplay">
             <h2>Experiment Results</h2>
-            <p id="kclResult">Kirchhoff's Current Law (KCL): Not calculated</p>
-            <p id="kvlResult">Kirchhoff's Voltage Law (KVL): Not calculated</p>
+            <p id="lawResult">No calculation performed</p>
         </div>
 
         <div class="experiment-explanation">
             <h2>Kirchhoff's Laws Explained</h2>
-            <h3>Kirchhoff's Current Law (KCL)</h3>
-            <p>KCL states that the total current entering a junction is equal to the total current leaving the junction. In mathematical terms, the sum of all currents at a node must equal zero.</p>
-            
-            <h3>Kirchhoff's Voltage Law (KVL)</h3>
-            <p>KVL states that the sum of all voltage drops and rises in a closed loop must equal zero. This law is fundamental in analyzing complex electrical circuits.</p>
+            <div id="kvl-explanation">
+                <h3>Kirchhoff's Voltage Law (KVL)</h3>
+                <p>KVL states that the sum of all voltage drops and rises in a closed loop must equal zero. This law is fundamental in analyzing complex electrical circuits.</p>
+            </div>
+            <div id="kcl-explanation" style="display: none;">
+                <h3>Kirchhoff's Current Law (KCL)</h3>
+                <p>KCL states that the total current entering a junction is equal to the total current leaving the junction. In mathematical terms, the sum of all currents at a node must equal zero.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        function verifyKirchhoffLaws() {
-            // Get input values
+        let currentLaw = 'kvl';
+
+        function selectLaw(law) {
+            currentLaw = law;
+            const kvlInputs = document.getElementById('kvl-inputs');
+            const kclInputs = document.getElementById('kcl-inputs');
+            const circuitImage = document.getElementById('circuit-image');
+            const kvlExplanation = document.getElementById('kvl-explanation');
+            const kclExplanation = document.getElementById('kcl-explanation');
+            const lawButtons = document.querySelectorAll('.law-btn');
+
+            lawButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (law === 'kvl') {
+                kvlInputs.style.display = 'grid';
+                kclInputs.style.display = 'none';
+                circuitImage.src = 'kvl_circuit.png';
+                kvlExplanation.style.display = 'block';
+                kclExplanation.style.display = 'none';
+            } else {
+                kvlInputs.style.display = 'none';
+                kclInputs.style.display = 'grid';
+                circuitImage.src = 'kcl_circuit.png';
+                kvlExplanation.style.display = 'none';
+                kclExplanation.style.display = 'block';
+            }
+        }
+
+        function verifyLaw() {
+            const resultDisplay = document.getElementById('lawResult');
+
+            if (currentLaw === 'kvl') {
+                verifyKVL();
+            } else {
+                verifyKCL();
+            }
+        }
+
+        function verifyKVL() {
             const v1 = parseFloat(document.getElementById('voltage1').value);
             const v2 = parseFloat(document.getElementById('voltage2').value);
             const v3 = parseFloat(document.getElementById('voltage3').value);
@@ -135,27 +281,48 @@
             }
 
             // Calculate currents using Ohm's Law
-            const i1 = v1 / r1;
-            const i2 = v2 / r2;
-            const i3 = v3 / r3;
-
-            // Verify Kirchhoff's Current Law (KCL)
-            const totalCurrentAtJunction = i1 + i2 + i3;
-            const kclVerification = Math.abs(totalCurrentAtJunction) < 0.001 ? 
-                'Verified ✅ (Sum of currents ≈ 0)' : 
-                'Not Verified ❌';
+            const i1 = (v1 + v2) / (r1 + r2);
+            const i2 = (v3) / r3;
 
             // Verify Kirchhoff's Voltage Law (KVL)
-            const totalVoltageLoop = v1 + v2 + v3 - (i1*r1 + i2*r2 + i3*r3);
+            const totalVoltageLoop = v1 + v2 + v3 - (i1*r1 + i1*r2 + i2*r3);
             const kvlVerification = Math.abs(totalVoltageLoop) < 0.001 ? 
                 'Verified ✅ (Sum of voltage drops ≈ 0)' : 
                 'Not Verified ❌';
 
-            // Update results display
-            document.getElementById('kclResult').textContent = 
-                `Kirchhoff's Current Law (KCL): ${kclVerification}`;
-            document.getElementById('kvlResult').textContent = 
+            document.getElementById('resultDisplay').textContent = 
                 `Kirchhoff's Voltage Law (KVL): ${kvlVerification}`;
+        }
+
+        function verifyKCL() {
+            const i1 = parseFloat(document.getElementById('current1').value);
+            const i2 = parseFloat(document.getElementById('current2').value);
+            const i3 = parseFloat(document.getElementById('current3').value);
+            const junctionRef1 = parseFloat(document.getElementById('junctionRef1').value);
+            const junctionRef2 = parseFloat(document.getElementById('junctionRef2').value);
+
+            // Validate inputs
+            if ([i1, i2, i3, junctionRef1, junctionRef2].some(isNaN)) {
+                alert('Please enter valid values for all inputs');
+                return;
+            }
+
+            // Verify Kirchhoff's Current Law (KCL)
+            const junctionCurrentSum1 = i1 - i2 - i3;
+            const junctionCurrentSum2 = i2 - junctionRef1 - junctionRef2;
+
+            const kclVerification1 = Math.abs(junctionCurrentSum1) < 0.001 ? 
+                'Junction 1: Verified ✅' : 'Junction 1: Not Verified ❌';
+            
+            const kclVerification2 = Math.abs(junctionCurrentSum2) < 0.001 ? 
+                'Junction 2: Verified ✅' : 'Junction 2: Not Verified ❌';
+
+            document.getElementById('resultDisplay').textContent = 
+                `Kirchhoff's Current Law (KCL): ${kclVerification1}, ${kclVerification2}`;
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
         }
     </script>
 </body>
